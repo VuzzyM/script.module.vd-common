@@ -122,6 +122,8 @@ def cut_by_year(title: str, year: str):
 
 
 def extract_original_title_year(title) -> VideoInfo:
+    if not title:
+        return {}
     source = title
     year = None
     original_title = None
