@@ -354,6 +354,7 @@ def detect_tvshow(title: str) -> Optional[bool]:
         return True
     patterns = [
         r'\[[Ss]\d{1,2}\]',
+        r'(?<=\.)[Ss]\d{1,2}(?=\.|$)',
         r'\[[Ss]\d{1,2}-\d{1,2}\]',
         r'[Ss]eason[ _-]?(\d{1,2})',
         r'[Ee]\d{1,2}-\d{1,2}',
