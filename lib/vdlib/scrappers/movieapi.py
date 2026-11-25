@@ -287,7 +287,7 @@ class tmdb_movie_item(tmdb_movie_item_base):
         info["uniqueid"].update({
             "imdb": self.imdb(),
             "tmdb": str(self.tmdb_id()),
-            "tvdb": str(self.tvdb_id()),
+            "tvdb": str(self.tvdb_id() or self.tvdb_id_fallback()),
         })
 
         return info
@@ -304,6 +304,24 @@ class tmdb_movie_item(tmdb_movie_item_base):
 
     def tvdb_id(self):
         return self._get_json_data().get("external_ids", {}).get("tvdb_id")
+
+    def tvdb_id_fallback(self):
+        imdb = self.imdb()
+        if not imdb:
+            return None
+
+        try:
+            r = requests.get(
+                "https://api.tvmaze.com/lookup/shows",
+                params={"imdb": imdb},
+                timeout=5,
+            )
+            if r.ok:
+                return r.json().get("externals", {}).get("thetvdb")
+        except Exception:
+            pass
+
+        return None
 
     def posters(self) -> List[str]:
         try:
